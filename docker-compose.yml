@@ -1,0 +1,55 @@
+version: '3.8'
+services:
+    api:
+        container_name: skeleton_api
+        tty: true
+        build:
+            context: .
+            dockerfile: Dockerfile-api
+        ports:
+            - "7001:3000"
+        volumes:
+            - .:/opt/src
+        working_dir: /opt/src/api
+        command: npm run dev
+        depends_on:
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_started
+        env_file:
+            - .env
+    ui:
+        container_name: skeleton_ui
+        image: node:18
+        tty: true
+        ports:
+            - "7002:3000"
+        volumes:
+            - .:/opt/src
+        working_dir: /opt/src/ui
+        command: npm run dev
+        env_file:
+            - .env
+    redis:
+        container_name: skeleton_redis
+        image: redis:7
+        volumes:
+            - ./containers/redis/data:/data
+    mysql:
+        container_name: skeleton_mysql
+        build:
+            context: .
+            dockerfile: Dockerfile-mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: ${DATABASE_NAME}
+        volumes:
+            - ./containers/mysql/data:/var/lib/mysql
+            - ./containers/mysql/config/init.sql:/var/lib/init/db.sql
+            - ./containers/mysql/config/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+        healthcheck:
+            test: ['CMD-SHELL', 'mysqladmin ping']
+            interval: 1s
+            timeout: 2s
+            retries: 20

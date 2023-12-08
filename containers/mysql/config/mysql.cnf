@@ -1,0 +1,8 @@
+[mysqld]
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+datadir         = /var/lib/mysql
+secure-file-priv= NULL
+#general_log_file = /var/log/mysql.log
+#general_log = 1
+sql_mode=NO_ENGINE_SUBSTITUTION

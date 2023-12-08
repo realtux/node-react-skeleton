@@ -1,0 +1,8 @@
+FROM node:18
+
+RUN cd /opt && \
+    wget https://github.com/realtux/rmig/releases/download/0.0.4/rmig-0.0.4-linux && \
+    chmod +x rmig-0.0.4-linux && \
+    ln -s /opt/rmig-0.0.4-linux /usr/bin/rmig
+
+USER node

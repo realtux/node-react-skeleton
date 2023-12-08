@@ -1,0 +1,6 @@
+FROM mysql:8
+
+RUN touch /var/log/mysql.log && \
+    chown mysql: /var/log/mysql.log
+
+CMD docker-entrypoint.sh --init-file /var/lib/init/db.sql
